@@ -1,13 +1,9 @@
 var http       = require('http');
 var express    = require('express');
 var app        = express();
-var crypto     = require('crypto');
 var random     = require('./random');
 var bodyParser = require('body-parser');
-
-function md5(data) {
-    return crypto.createHash('md5').update(data).digest("hex");
-}
+var md5        = require('./md5');
 
 function createToken() {
     return md5(Math.random() + new Date).substring(0, 8);

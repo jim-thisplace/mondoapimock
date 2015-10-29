@@ -1,0 +1,7 @@
+[
+  {
+    "account_id": "account_id",
+    "id": "webhook_id",
+    "url": "http://example.com"
+  }
+]
