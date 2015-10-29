@@ -19,7 +19,6 @@ app.disable('x-powered-by');
 
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
-    res.header('X-ACCESS', 'MAIN SECURITY GRID');
     next();
 });
 
@@ -57,14 +56,24 @@ function verifyCredentials(req) {
             req.body.password
         ]);
     } else if (req.body.grant_type === 'refresh_token') {
+        var theSession = getSession(req);
+
         return logicalArrayAND([
             req.body.client_id,
             req.body.client_secret,
-            req.body.refresh_token
+            req.body.refresh_token === theSession.refresh_token
         ]);
     } else {
         return false;
     }
+}
+
+/**
+ * @param {string} client_secret
+ * @returns {Number}
+ */
+function getUserIdByClientSecret(client_secret) {
+    return parseInt(md5(client_secret).substring(0, 3), 16);
 }
 
 function acquireAccessToken(req, res) {
@@ -74,8 +83,10 @@ function acquireAccessToken(req, res) {
             refresh_token : createToken(),
             client_id     : req.body.client_id,
             client_secret : req.body.client_secret,
-            user_id       : parseInt(md5(req.body.client_secret).substring(0,3), 64)
+            user_id       : getUserIdByClientSecret(req.body.client_secret)
         };
+
+        sessions[session.access_token] = session;
 
         res.status(200).json({
             access_token  : session.access_token,
@@ -90,11 +101,19 @@ function acquireAccessToken(req, res) {
     }
 }
 
-function lookupAccessToken(req, res) {
+/**
+ * @param req
+ * @returns {object|undefined}
+ */
+function getSession(req) {
     var accessToken = req.get('Authorization') || '';
     accessToken     = accessToken.split(' ')[1];
 
-    var theSession = sessions[accessToken];
+    return sessions[accessToken];
+}
+
+function lookupAccessToken(req, res) {
+    var theSession = getSession(req);
 
     if (theSession) {
         res.status(200).json({

@@ -7,11 +7,13 @@
     "url": "https://bitbucket.org/jim-thisplace/mondoapimock.git"
   },
   "scripts": {
-    "start": "npm install ; pm2 delete all ; pm2 start server.js"
+    "start": "node server.js"
   },
   "dependencies": {
+    "chai": "~1.7.0",
+    "mocha": "~2.2.4",
+    "sync-request": "~2.0.1",
     "body-parser": "~1.13.2",
-    "express": "~4.12.3",
-    "pm2": "~0.14.3"
+    "express": "~4.12.3"
   }
 }
