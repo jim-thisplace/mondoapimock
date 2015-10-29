@@ -1,0 +1,17 @@
+{
+  "name": "mondo-api-mock",
+  "private": true,
+  "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://bitbucket.org/jim-thisplace/mondoapimock.git"
+  },
+  "scripts": {
+    "start": "npm install ; pm2 delete all ; pm2 start server.js"
+  },
+  "dependencies": {
+    "body-parser": "~1.13.2",
+    "express": "~4.12.3",
+    "pm2": "~0.14.3"
+  }
+}
